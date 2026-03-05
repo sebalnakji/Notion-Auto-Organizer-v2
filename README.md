@@ -1,6 +1,7 @@
 # Notion-Auto-Organizer
 
 ![Claude](https://img.shields.io/badge/Claude-claude--sonnet-D97757?logo=anthropic&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini-8E75B2?logo=googlegemini&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-000000?logo=notion&logoColor=white)
 ![Markdown](https://img.shields.io/badge/Markdown-000000?logo=markdown&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
@@ -25,15 +26,19 @@ Claude와 Notion MCP를 활용한 **지식 관리 자동화 워크플로우**입
 ## 워크플로우
 
 ```
-사용자 요청
+사용자 요청 (AI 어시스턴트에게 지시)
     ↓
-Claude — main_prompt.md 읽기 → 작업 유형 파악 → 세부 프롬프트 읽기
+AI 어시스턴트 — main_prompt.md 읽기 및 작업 준비 (Notion 페이지 확인)
     ↓
-Claude — 초안 작성 → src/{workspace}/ 저장
+AI 어시스턴트 — 터미널을 통해 Claude CLI 호출 (해당 프롬프트와 함께 초안 작성 지시)
     ↓
-Gemini — 내용 보완 및 팩트 체크
+Claude CLI — 초안 작성 후 반환
     ↓
-Claude — 최종 검증 → Notion MCP로 업로드
+AI 어시스턴트 — 자체적으로 내용 보완 및 팩트 체크 (Enhance 단계)
+    ↓
+AI 어시스턴트 — 완성된 최종본을 다시 Claude CLI로 전달하며 업로드 지시
+    ↓
+Claude CLI — 최종 검증 및 Notion MCP로 지정된 페이지에 직접 업로드
 ```
 
 ---
@@ -99,7 +104,7 @@ git checkout main
 
 ### 1. 작업 준비
 
-Claude에게 아래와 같이 먼저 컨텍스트를 잡아줍니다.
+AI 어시스턴트에게 아래와 같이 새 세션에서 작업을 지시합니다.
 
 ```
 prompt/main_prompt.md를 읽고 작업을 준비해줘.
