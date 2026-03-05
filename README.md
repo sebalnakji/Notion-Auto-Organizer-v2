@@ -7,6 +7,7 @@
 ![Google_Antigravity](https://img.shields.io/badge/Google_Antigravity-4285F4?logo=google&logoColor=white)
 
 Claude와 Notion MCP를 활용한 **지식 관리 자동화 워크플로우**입니다.
+
 VSCode기반의 **Google Antigravity**를 IDE로 사용하여 개발 및 자동화 파이프라인을 구축했습니다.
 
 개념 정리, 코드 포트폴리오, 논문 리뷰 등 다양한 지식을 일관된 구조로 정리하고 Notion에 자동 업로드합니다.
@@ -120,9 +121,9 @@ Notion 업로드 대상 페이지는 '{Notion 페이지 이름}'이야.
 # 개념 정리
 "{주제명} 개념 정리해줘"
 
-# 코드 정리
-"{레포명} 팀 프로젝트 코드 정리해줘"
-"{레포명} 개인 프로젝트 코드 정리해줘"
+# 코드 내용 정리
+"{레포명} 팀 프로젝트 코드 내용 정리해줘"
+"{레포명} 개인 프로젝트 코드 내용 정리해줘"
 
 # 자료조사
 "{대주제}/{중주제} 주제로 @{파일명} 자료조사 해줘"

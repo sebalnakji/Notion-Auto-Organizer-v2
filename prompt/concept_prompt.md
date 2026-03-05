@@ -67,11 +67,12 @@ Rules:
 
 ---
 
-## STEP 3 — Claude: Verify + Notion Upload
+## STEP 3 — Claude: Verify & Enhance + Notion Upload
 
 ```
 File: @{concept}.md
 Task: Final verification then Notion upload (follow upload rules in main_prompt.md)
+After verification, enhance any insufficient sections before uploading.
 
 Verify:
 - Why/Where: Does the flow connect naturally?

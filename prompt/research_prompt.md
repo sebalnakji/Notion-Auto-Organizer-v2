@@ -88,11 +88,12 @@ Rules:
 - Save after review.
 ```
 
-### STEP 3 — Claude: Verify + Notion Upload
+### STEP 3 — Claude: Verify & Enhance + Notion Upload
 
 ```
 File: @{paper_title}.md
 Task: Final verification then Notion upload (follow upload rules in main_prompt.md)
+After verification, enhance any insufficient sections before uploading.
 
 Verify:
 - Basic info: Complete?
@@ -155,11 +156,12 @@ Rules:
 - Save after review.
 ```
 
-### STEP 3 — Claude: Verify + Notion Upload
+### STEP 3 — Claude: Verify & Enhance + Notion Upload
 
 ```
 File: @{paper_title}.md
 Task: Final verification then Notion upload (follow upload rules in main_prompt.md)
+After verification, enhance any insufficient sections before uploading.
 
 Verify:
 - Abstract: Is purpose/findings/implications clear and consistent with detailed breakdown?
