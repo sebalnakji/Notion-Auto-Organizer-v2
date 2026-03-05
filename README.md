@@ -3,10 +3,11 @@
 ![Claude](https://img.shields.io/badge/Claude-claude--sonnet-D97757?logo=anthropic&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Gemini-8E75B2?logo=googlegemini&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-000000?logo=notion&logoColor=white)
-![Markdown](https://img.shields.io/badge/Markdown-000000?logo=markdown&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
+![Google_Antigravity](https://img.shields.io/badge/Google_Antigravity-4285F4?logo=google&logoColor=white)
 
 Claude와 Notion MCP를 활용한 **지식 관리 자동화 워크플로우**입니다.
+VSCode기반의 **Google Antigravity**를 IDE로 사용하여 개발 및 자동화 파이프라인을 구축했습니다.
 
 개념 정리, 코드 포트폴리오, 논문 리뷰 등 다양한 지식을 일관된 구조로 정리하고 Notion에 자동 업로드합니다.
 
