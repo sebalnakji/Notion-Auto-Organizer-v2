@@ -1,110 +1,62 @@
 # CODE PROMPT
 
-## GOAL
+**Goal**: Professional portfolio documentation for interviewers. (No code snippets)
 
-Document the project so interviewers/reviewers can understand it quickly and accurately.
-Focus on logic flow and decision rationale — no code snippets.
+## TONE & MANNER ROUTING
+
+Adjust the tone based on the user's provided tag:
+
+**[story] (Engaging Narrative Mode)**
+
+- **Goal**: Engaging, story-driven portfolio.
+- **Tone**: Polite, friendly Korean ("~했습니다", "~합시다").
+- **Style**: Connect purpose and logic seamlessly so the interviewer naturally grasps the project context. Make rationales easy to relate to.
+
+**[info] (Fast Information Mode)**
+
+- **Goal**: Concise, highly scannable resume/wiki style.
+- **Tone**: Objective, precise, and direct Korean ("~함", "~임", "~구현").
+- **Style**: Focus strictly on metrics, data flow, and fact-driven impact. No filler narrative. Bullet points highly encouraged.
 
 ---
 
 ## STRUCTURE
 
-### Team Project
+**[Team Project]**: Overview → Stack → My Role → Core Logic
+**[Personal Project]**: Purpose → Stack → Key Features → Core Logic
+**[Common Optional]**: Insights (Troubleshooting / Perf Optimization / Retrospective)
 
-Required: Overview → Stack → My Role → Core Logic
-Optional: Insights (only if user provides the content directly)
-
-- Overview: 1–2 line summary of purpose and features, team size, duration
-- Stack: Tech list + one-line reason for key technology choices
-- My Role: Features/modules owned, scope of contribution (core)
-- Core Logic: Step-by-step implementation flow, decision rationale, data flow (core)
-- Insights: Troubleshooting / Performance optimization / Retrospective
-
-### Personal Project
-
-Required: Purpose → Stack → Key Features → Core Logic
-Optional: Insights (only if user provides the content directly)
-
-- Purpose: What problem it solves and why it was built
-- Stack: Tech list + one-line reason for key technology choices
-- Key Features: Feature list + what problem each feature solves (core)
-- Core Logic: Step-by-step flow, decision rationale, data flow (core)
-- Insights: Troubleshooting / Performance optimization / Retrospective
-
-My Role/Key Features and Core Logic are the most critical sections. These are what interviewers focus on most.
-
-Insights rules:
-
-- Cannot be inferred from code alone. Write only if the user explicitly provides the content.
-- If not provided, omit entirely — no exceptions.
-- Troubleshooting: Problem → Cause → Solution → Result
-- Performance optimization: Before/after metrics required
-- Retrospective: Lessons learned, regrets, future improvements
+- **Overview / Purpose**: Purpose, features, team/duration.
+- **Stack**: Tech list + 1-line rationale.
+- **My Role / Key Features [CORE]**: Specific contribution scope / Problem solved.
+- **Core Logic [CORE]**: Step-by-step data flow, decision rationale.
+- **Insights [Optional]**: Use ONLY if explicitly provided by user.
+  - _Troubleshooting (Problem→Cause→Solution→Result)_
+  - _Perf Opt (Before/after metrics)_
 
 ---
 
 ## STEP 1 — Claude: Draft
 
-```
-Repo: {repo_name}
-Type: {team / personal}
-Task: Write portfolio draft and save to src/code_workspace/{team or personal}/{project_name}/{project_name}.md
-
-Follow the STRUCTURE in order.
-- Allocate the most effort to My Role/Key Features and Core Logic.
-- Explain Core Logic using input → process → output flow.
-- Write Insights only if the user has provided the content.
-
-Rules:
-- Base content strictly on the actual repo. No speculation or exaggeration.
-- Use clear hierarchy for easy Notion toggle conversion.
-- Self-review flow and facts before saving.
-- Write in Korean. Technical terms and proper nouns (e.g. RAG, LLM) remain in their original form.
-```
-
----
+- **Task**: Draft `src/code_workspace/{team|personal}/{project_name}/{project_name}.md`.
+- Allocate most effort to **[CORE]** sections.
+- Verified facts only from repo. No exaggerations.
+- Write in Korean (preserve technical terms in English like RAG).
+- **CRITICAL**: Apply the requested Tone & Manner (`[story]` or `[info]`) precisely.
+- Use clear hierarchy for Notion toggles.
 
 ## STEP 2 — Gemini: Enhance
 
-```
-File: @{project_name}.md
-Task: Improve document quality from an interviewer's perspective.
-
-Team project review:
-1. Overview: Is the purpose immediately clear?
-2. Stack: Are the technology choices justifiable?
-3. My Role [HIGHEST PRIORITY]: Is the contribution scope specific? Replace vague expressions with metrics or feature names.
-4. Core Logic [HIGHEST PRIORITY]: Is the flow clear? Is the decision rationale convincing?
-5. Insights (if present): Enhance based only on user-provided content. Do not add anything independently.
-
-Personal project review:
-1. Purpose: Is the motivation specific and relatable?
-2. Stack: Are the technology choices justifiable?
-3. Key Features [HIGHEST PRIORITY]: Is it clear what problem each feature solves? Restructure from problem-solving perspective if too list-like.
-4. Core Logic [HIGHEST PRIORITY]: Is the flow clear? Is the decision rationale convincing?
-5. Insights (if present): Enhance based only on user-provided content. Do not add anything independently.
-
-Rules:
-- Fix content that differs from or exaggerates the repo.
-- Remove unnecessary explanations. Concise portfolios are stronger.
-- Highlight key metrics and achievements with `> ` or `!> `.
-- Save after review.
-```
-
----
+- **Task**: Improve interviewer appeal in `@{project_name}.md`.
+- Refine **[CORE]** sections: Replace vague expressions with metrics/features.
+- Highlight key metrics/achievements with `> ` or `!> `.
+- **CRITICAL**: Enforce the requested Tone & Manner strictly throughout the entire document.
+- DO NOT hallucinate Insights. Enhance only provided content.
 
 ## STEP 3 — Claude: Verify & Enhance
 
-```
-File: @{project_name}.md
-Task: Final verification and enhancement of any insufficient sections.
-
-Verify:
-- Overview/Purpose + Stack: Immediately understandable at a glance?
-- My Role/Key Features [HIGHEST PRIORITY]: Is the contribution specific and clear?
-- Core Logic [HIGHEST PRIORITY]: Is the flow clear with convincing decision rationale?
-- Insights (if present): Contains only user-provided content? Check troubleshooting structure, optimization metrics, and retrospective specificity.
-- Remove exaggerations, errors, and unverifiable content.
-- Remove or replace invalid links.
-- Fix typos and unnatural phrasing.
-```
+- **Task**: Final polish of `@{project_name}.md`.
+- Verify clarity of **[CORE]** sections & rationales.
+- Validate Insights structure (metrics/flow) if present.
+- **CRITICAL**: Ensure the document perfectly matches the requested Tone & Manner (`[story]` or `[info]`). Fix contradictory phrasing.
+- Remove misleading, exaggerated, or unverifiable claims. Fix typos.

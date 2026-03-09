@@ -11,9 +11,9 @@
 ## 초기 설정
 
 이 파일이 처음 읽히면 사용자에게 아래 질문을 한다:
-"Notion 문서를 업로드할 페이지가 어디인가요? (예: '개념 노트 -> DSA')"
+"Notion 문서를 업로드할 페이지가 어디인가요? (예: '개념 노트 -> [메인 태그(대주제)] -> [서브 태그(중주제)]')"
 답변을 이 세션의 모든 Notion 업로드 대상 페이지로 저장한다.
-_참고사항: Notion 업로드 대상 경로는 로컬 파일 시스템의 논리적 디렉터리 구조(예: `src/concept_workspace/DSA/Algorithm/Big-O.md`)와 독립적이다. 로컬 경로를 강제로 Notion 페이지 이름과 일치시키려 하지 마라._
+_참고사항: Notion 업로드 대상 경로는 로컬 파일 시스템(`src/concept_workspace/{대주제}/{중주제}/`)과 엄밀히 매핑된다. (예: Notion `DSA -> Complexity` 맵핑 시 로컬 경로 `src/concept_workspace/DSA/Complexity/개념명.md`)._
 
 ---
 
@@ -57,9 +57,10 @@ prompt/
 
 ## 공통 규칙
 
-0. **트러블슈팅 SOP**: 예상치 못한 오류나 실패가 발생하면 즉시 중단(STOP)한다. 가장 먼저 `prompt/troubleshooting.md`의 `<issue_index>`에서 유사한 문제를 검색(SEARCH)한다. 일치하는 항목이 있으면 문서화된 해결책을 적용한다. 일치하는 항목이 없으면, 스스로 문제를 분석하고 해결한 뒤 `docs/troubleshooting/` 폴더에 엄격한 `<file_template>` 양식에 맞춰 새로운 `TS-[ID]` 파일을 생성(CREATE)하고 `prompt/troubleshooting.md`의 `<issue_index>` 상단에 내용을 추가한다.
+0. **트러블슈팅 SOP**: 예상치 못한 오류나 실패가 발생하면 즉시 중단(STOP)한다. 가장 먼저 `prompt/troubleshooting.md`의 `## ISSUE INDEX`에서 유사한 문제를 검색(SEARCH)한다. 일치하는 항목이 있으면 문서화된 해결책을 적용한다. 일치하는 항목이 없으면, 스스로 문제를 분석하고 해결한 뒤 `docs/troubleshooting/` 폴더에 엄격한 `## FILE TEMPLATE` 양식에 맞춰 새로운 `TS-[ID]` 파일을 생성(CREATE)하고 `prompt/troubleshooting.md`의 `## ISSUE INDEX` 하단에 내용을 추가한다.
 1. 작업 전 반드시 해당 영문 프롬프트 파일을 읽는다.
-2. 자동화된 AI-to-AI 단독 워크플로우:
+2. **어조 분기(Tone Routing)**: 사용자의 요청에 어조 태그(`[story]` 또는 `[info]`)가 포함되어 있다면, 이 태그를 Claude CLI(Step 1, 3, 4)에게 반드시 전달해야 한다. 또한 Step 2를 수행할 때도 해당 태그의 톤 앤 매너를 철저히 지켜야 한다. 태그가 없으면 기본적으로 `[story]`로 간주한다.
+3. 자동화된 AI-to-AI 단독 워크플로우:
    - **사전 단계 (디렉터리 생성)**: 초안 작성 전, 저장 경로의 디렉터리가 없으면 먼저 생성한다.
      ```powershell
      New-Item -ItemType Directory -Force -Path "<파일명을 제외한 저장 경로>"
@@ -67,6 +68,7 @@ prompt/
    - **STEP 1 (초안 — Claude CLI)**: 초안은 반드시 Claude CLI가 생성하여 Markdown 파일로 저장해야 한다. 이 과정에서 오류가 발생하면 즉시 워크플로우를 중단한다. 불완전한 PowerShell 문자열 파이프를 사용하지 마라. 대신 파이썬 유틸리티를 사용하여 엄격한 템플릿과 주제 프롬프트를 조합하라.
      ```powershell
      python src\scripts\generate_prompt.py --instruction prompt\constraints\step1_draft_prompt.md --draft prompt\core\concept_prompt.md --output $env:TEMP\claude_prompt_step1.txt
+     Add-Content -Path $env:TEMP\claude_prompt_step1.txt -Value "`n`nUser Request: <어조 태그를 포함한 사용자의 원본 요청 문자열 삽입>"
      Get-Content "$env:TEMP\claude_prompt_step1.txt" -Raw | claude -p --dangerously-skip-permissions | Out-File -FilePath "<저장경로>" -Encoding UTF8
      ```
    - **STEP 2 (보완 — Gemini)**: 네가 직접 보완 규칙에 따라 초안을 검토하고 품질을 높인다. 보완된 파일을 저장한다.
@@ -80,10 +82,10 @@ prompt/
      python src\scripts\generate_prompt.py --instruction prompt\constraints\step4_upload_prompt.md --draft "<저장경로>" --output $env:TEMP\claude_prompt_step4.txt
      # Note: MCP 권한승인 프롬프트 때문에 Claude의 대화형 모드가 필수적이다 (TS-001). 터미널에서 Claude를 실행하고 생성된 텍스트를 직접 복사/붙여넣기 하라.
      ```
-3. 사용자 판단이 필요한 단계에서는 반드시 응답을 기다린 후 진행한다.
-4. 불확실하거나 검증 불가한 내용은 즉시 삭제한다.
-5. Claude CLI가 오류를 반환하거나 출력이 없으면 즉시 전체 워크플로우를 중단하고 사용자에게 오류를 보고한다. 다음 단계로 진행하지 않는다. 대체 수단으로 직접 초안을 작성하지 않는다.
-6. Claude CLI는 반드시 포그라운드에서 실행한다. 백그라운드로 실행하지 않는다.
+4. 사용자 판단이 필요한 단계에서는 반드시 응답을 기다린 후 진행한다.
+5. 불확실하거나 검증 불가한 내용은 즉시 삭제한다.
+6. Claude CLI가 오류를 반환하거나 출력이 없으면 즉시 전체 워크플로우를 중단하고 사용자에게 오류를 보고한다. 다음 단계로 진행하지 않는다. 대체 수단으로 직접 초안을 작성하지 않는다.
+7. Claude CLI는 반드시 포그라운드에서 실행한다. 백그라운드로 실행하지 않는다.
 
 ---
 
@@ -109,9 +111,9 @@ prompt/
 ## 사용 예시
 
 ```
-개념 정리: "[주제명] 개념 정리해줘"
-팀 코드:   "[레포명] 팀 프로젝트 코드 정리해줘"
-개인 코드: "[레포명] 개인 프로젝트 코드 정리해줘"
-자료조사:  "[대주제]/[중주제] 주제로 @[파일명] 자료조사 해줘"
-연구 정리: "[대주제]/[중주제] 주제로 @[파일명] 논문 정리해줘"
+개념 정리: "[story] [주제명] 개념 정리해줘"
+팀 코드:   "[info] [레포명] 팀 프로젝트 코드 정리해줘"
+개인 코드: "[story] [레포명] 개인 프로젝트 코드 정리해줘"
+자료조사:  "[info] [대주제]/[중주제] 주제로 @[파일명] 자료조사 해줘"
+연구 정리: "[story] [대주제]/[중주제] 주제로 @[파일명] 논문 정리해줘"
 ```
