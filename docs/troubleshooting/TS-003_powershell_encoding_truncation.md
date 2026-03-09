@@ -15,10 +15,19 @@ During Step 3 (Verify & Enhance), when attempting to read the draft Markdown and
 - [Failed] Using `Set-Content` instead of `Out-File`.
 - [Success] Using a Python script to handle file I/O safely.
 
-## 4. Final Resolution: Replaced PowerShell with Python Script
+## 4. Final Resolution: The `generate_prompt.py` Utility
 
-To ensure robust UTF-8 handling and safe file operations, a Python script (`generate_prompt.py`) was created to handle reading the draft, merging it with the prompt instructions, and saving it to a temporary file. The `claude` CLI was then invoked to read this temporary file. This completely bypassed PowerShell's unreliable string piping and encoding mechanics.
+To ensure robust UTF-8 handling and safe file operations across platforms, the workflow was refactored:
+
+1. Created `src/scripts/generate_prompt.py`. This script accepts `--instruction`, `--draft`, and `--output` arguments to merge text safely into a temporary file.
+2. The pipeline now executes:
+   ```powershell
+   python src\scripts\generate_prompt.py --instruction <inst> --draft <draft> --output $env:TEMP\prompt.txt
+   Get-Content $env:TEMP\prompt.txt -Raw | claude -p ... | Out-File -FilePath <out> -Encoding UTF8
+   ```
+   By managing file concatenation internally via Python open/write paths, we bypassed PowerShell's unpredictable stream truncation and encoding corruption.
 
 ## 5. Notes:
 
-For complex text manipulation pipelines involving Unicode (Korean), rely on cross-platform Python scripts rather than native Windows PowerShell piping.
+- Do not pipe string literals formatting (e.g. `@"..."@`) directly using PowerShell arrays into `claude`.
+- Always rely on `generate_prompt.py` to compile the instructions to a `.txt` file first, then use `Get-Content ... -Raw` to pass the payload into Claude.

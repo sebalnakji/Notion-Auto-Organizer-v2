@@ -13,10 +13,16 @@ Claude Code (v2.1.70) operates as an autonomous agent by default. When given a p
 - [Failed] Basic prompt instruction: "Generate Markdown" -> Claude still included conversational prefaces.
 - [Success] Advanced Prompt Engineering: Added explicit, strict constraints to the `concept_prompt.md` instructions: "OUTPUT ONLY RAW MARKDOWN", "DO NOT include conversational text", "DO NOT try to save the file yourself".
 
-## 4. Final Resolution: Prompt Refinement & Python Scripting
+## 4. Final Resolution: Strict Constraint Templates & generate_prompt.py
 
-The issue was resolved by heavily restricting Claude Code's behavior within the prompt itself. Furthermore, to avoid relying entirely on unpredictable stdout piping, the workflow was adjusted to use a Python script (`generate_prompt.py`) to safely assemble the context and instructions, ensuring the prompt passed to Claude explicitly demanded raw output.
+The issue was entirely resolved by separating the strict constraints from the core text and using a Python script:
+
+1. **Strict Constraints Templates (`step1_draft_prompt.md`, `step3_verify_prompt.md`)**: Reusable templates that explicitly force Claude CLI to "OUTPUT ONLY RAW MARKDOWN" and forbid conversational filler.
+2. **File Assembly via Python**: Using `src/scripts/generate_prompt.py` to safely merge the strict instruction templates with the drafting content before passing it to Claude CLI. This removes ambiguity and forces the AI into a strict data-parsing mindset.
 
 ## 5. Notes:
 
-When using an Agentic CLI tool like `claude` in automated pipelines, prompts must be designed defensively to suppress its natural conversational instincts.
+When using an Agentic CLI tool like `claude` in automated pipelines:
+
+- Always apply strict behavior-modifying constraints as a "system prefix" before the main payload.
+- As of V2.2, Step 3 (Verify) is marked as `[OPTIONAL]` in the workflow. If Step 2 (Gemini Enhance) was successful, Step 3 can be skipped to further reduce the risk of conversational corruption and save time.

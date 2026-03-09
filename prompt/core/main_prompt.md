@@ -11,8 +11,8 @@ Identify the task type from the ROUTING TABLE below, read the corresponding prom
 ## SETUP
 
 When this file is first read, ask the user:
-"Which Notion page should I upload documents to? (e.g., '개념 노트 -> [Main Tag] -> [Sub Tag]')"
-Store the answer as the target page for all subsequent Notion uploads in this session.
+"Which Notion page should I upload documents to? Please provide the exact Notion Page ID to speed up processing. (e.g., '개념 노트 -> [Main Tag] -> [Sub Tag] (ID: xxxxxxxx)')"
+Store the answer as the target page and its exact Notion Page ID for all subsequent Notion uploads in this session.
 _Note that the Notion target path perfectly maps to the local `{major_topic}/{sub_topic}` hierarchy (e.g., Notion `DSA -> Complexity` maps to Local `src/concept_workspace/DSA/Complexity/`). Ensure that the hierarchical structures are strictly aligned._
 
 ---
@@ -70,7 +70,7 @@ prompt/
      Get-Content "$env:TEMP\claude_prompt_step1.txt" -Raw | claude -p --dangerously-skip-permissions | Out-File -FilePath "<save_path>" -Encoding UTF8
      ```
    - **STEP 2 (Enhance — Gemini)**: You review Claude's draft according to the Enhance rules in the prompt and improve it yourself. Save the enhanced file.
-   - **STEP 3 (Verify + Enhance — Claude CLI)**: Send the enhanced draft to Claude CLI for final verification.
+   - **STEP 3 (Verify + Enhance — Claude CLI) [OPTIONAL]**: If you (Gemini) are completely confident in the layout and formatting from Step 2, you may SKIP this verification step to save time and API tokens. Otherwise, send the enhanced draft to Claude CLI for final verification.
      ```powershell
      python src\scripts\generate_prompt.py --instruction prompt\constraints\step3_verify_prompt.md --draft "<save_path>" --output $env:TEMP\claude_prompt_step3.txt
      Get-Content "$env:TEMP\claude_prompt_step3.txt" -Raw | claude -p --dangerously-skip-permissions | Out-File -FilePath "<save_path>" -Encoding UTF8
@@ -84,6 +84,7 @@ prompt/
 5. Remove any content that is uncertain or cannot be verified.
 6. If Claude CLI returns an error at any step, stop the entire workflow immediately and report the error to the user. Do not proceed to the next step. Do not write the draft yourself as a fallback.
 7. Always run Claude CLI in the foreground. Do not run it in the background.
+8. **MCP Interactive Mode Optimization**: When Claude CLI prompts you for permission to use any Notion MCP tools (like `notion-search`, `notion-create-page`, etc.), you MUST always select option `2` ("Yes, and don't ask again") to prevent interactive blockings during execution.
 
 ---
 
