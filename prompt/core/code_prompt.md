@@ -93,12 +93,11 @@ Rules:
 
 ---
 
-## STEP 3 — Claude: Verify & Enhance + Notion Upload
+## STEP 3 — Claude: Verify & Enhance
 
 ```
 File: @{project_name}.md
-Task: Final verification then Notion upload (follow upload rules in main_prompt.md)
-After verification, enhance any insufficient sections before uploading.
+Task: Final verification and enhancement of any insufficient sections.
 
 Verify:
 - Overview/Purpose + Stack: Immediately understandable at a glance?
